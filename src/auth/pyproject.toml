@@ -1,0 +1,77 @@
+[project]
+name = "auth"
+version = "0.1.0"
+description = "A microservice for registering, logging in, issuing and validating JWT tokens."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "sqlmodel>=0.0.22",
+    "sqlalchemy>=2.0.30",
+    "psycopg[binary]>=3.1.19",
+    "passlib[bcrypt]>=1.7.4",
+    "PyJWT>=2.8.0",
+    "pydantic>=2.7.0",
+    "email-validator>=2.1.1",
+    "pydantic-settings>=2.10.1",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.5.0"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["."]
+extend-exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",   # pycodestyle / pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "S",   # bandit
+    "C4",  # flake8-comprehensions
+    "PIE", # flake8-pie
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "PTH", # flake8-use-pathlib
+    "PL",  # pylint-like checks
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "S101", # use of assert (fine for tests / simple invariants)
+    "B904",
+    "B008",
+    "S105",
+]
+unfixable = [
+    "F401", # imported but unused (sometimes for __all__ / re-exports)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["auth"]
+combine-as-imports = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = 100
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.404",
+]
