@@ -1,46 +1,48 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-    name: minio
+  name: minio
 spec:
-    serviceName: 'minio'
-    replicas: 1
-    selector:
-        matchLabels:
-            app: minio
-    template:
-        metadata:
-            labels:
-                app: minio
-        spec:
-            containers:
-                - name: minio
-                  image: minio/minio:latest
-                  args:
-                      - server
-                      - /data
-                  env:
-                      - name: MINIO_ROOT_USER
-                        valueFrom:
-                            secretKeyRef:
-                                name: minio-secret
-                                key: MINIO_ROOT_USER
-                      - name: MINIO_ROOT_PASSWORD
-                        valueFrom:
-                            secretKeyRef:
-                                name: minio-secret
-                                key: MINIO_ROOT_PASSWORD
-                  ports:
-                      - containerPort: 9000
-                        name: http
-                  volumeMounts:
-                      - name: storage
-                        mountPath: '/data'
-    volumeClaimTemplates:
-        - metadata:
-              name: storage
-          spec:
-              accessModes: ['ReadWriteOnce']
-              resources:
-                  requests:
-                      storage: 1Gi
+  serviceName: "minio"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:latest
+          args:
+            - server
+            - /data
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: MINIO_ROOT_PASSWORD
+          ports:
+            - containerPort: 9000
+              name: s3
+            - containerPort: 9001
+              name: console
+          volumeMounts:
+            - name: storage
+              mountPath: "/data"
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

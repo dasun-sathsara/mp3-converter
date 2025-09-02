@@ -31,17 +31,44 @@ async def send_email(name: str | None, email: str, file_key: str) -> None:
     download_url = f"{settings.gateway_external_url}/download/{download_token}"
 
     subject = "Your MP3 is ready"
-    text = f"Hello {name or 'there'},\n\nYour MP3 file is ready: {download_url}\n\nRegards,\nMP3 Converter"
+    html = (
+        f"<p>Hello {name or 'there'},</p>"
+        f'<p>Your MP3 file is ready: <a href="{download_url}">Download</a></p>'
+        f"<p>Regards,<br/>MP3 Converter</p>"
+    )
     async with httpx.AsyncClient(base_url=settings.resend_base_url, timeout=10) as client:
-        headers = {"Authorization": f"Bearer {settings.resend_api_key}"}
+        headers = {
+            "Authorization": f"Bearer {settings.resend_api_key}",
+            "Content-Type": "application/json",
+        }
         data = {
-            "from": settings.sender_email,
+            "from": f"MP3 Converter <{settings.sender_email}>",
             "to": [email],
             "subject": subject,
-            "text": text,
+            "html": html,
         }
-        resp = await client.post("/emails", headers=headers, json=data)
-        resp.raise_for_status()
+        try:
+            resp = await client.post("/emails", headers=headers, json=data)
+            if resp.status_code >= 400:
+                try:
+                    error_body = resp.json()
+                except ValueError:
+                    error_body = resp.text
+                logger.error(f"Resend API error {resp.status_code}: {error_body}")
+            resp.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            request_id = exc.response.headers.get("x-request-id") or exc.response.headers.get(
+                "X-Request-ID"
+            )
+            try:
+                body = exc.response.json()
+            except ValueError:
+                body = exc.response.text
+            logger.error(
+                f"Failed to send via Resend ({exc.response.status_code}) "
+                f"request_id={request_id} body={body}"
+            )
+            raise
 
 
 async def process_message(message: aio_pika.abc.AbstractIncomingMessage) -> None:

@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
     name: notification-config
 data:
-    SENDER_EMAIL: 'noreply@dasunsathsara.com'
+    SENDER_EMAIL: 'onboarding@resend.dev'
     AUDIO_OUT_QUEUE: 'audio_out'
-    GATEWAY_EXTERNAL_URL: 'https://gateway.yourdomain.com'
+    GATEWAY_EXTERNAL_URL: 'http://localhost'

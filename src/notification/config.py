@@ -12,7 +12,7 @@ class Settings(BaseSettings):
         validation_alias="RABBITMQ_URL", default="amqp://user:pass@rabbitmq:5672/"
     )
     audio_queue: str = Field(validation_alias="AUDIO_OUT_QUEUE", default="audio_out")
-    sender_email: str = Field(validation_alias="SENDER_EMAIL", default="noreply@dasunsathsara.com")
+    sender_email: str = Field(validation_alias="SENDER_EMAIL", default="onboarding@resend.dev")
     resend_base_url: str = Field(default="https://api.resend.com")
     gateway_external_url: str = Field(validation_alias="GATEWAY_EXTERNAL_URL")
 
