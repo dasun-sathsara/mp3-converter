@@ -22,7 +22,7 @@ spec:
             - secretRef:
                 name: auth-postgres-secret
           volumeMounts:
-            - name: postgres-storage
+            - name: auth-postgres-storage
               mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
     - metadata:

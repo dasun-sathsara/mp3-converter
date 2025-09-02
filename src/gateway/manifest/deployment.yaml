@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: gateway-deployment
 spec:
-  repilicas: 1
+  replicas: 1
   selector:
     matchLabels:
       app: gateway
