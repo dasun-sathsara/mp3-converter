@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     )
     audio_queue: str = Field(validation_alias="AUDIO_OUT_QUEUE", default="audio_out")
     sender_email: str = Field(validation_alias="SENDER_EMAIL", default="noreply@dasunsathsara.com")
+    resend_base_url: str = Field(default="https://api.resend.com")
 
 
 try:
