@@ -44,6 +44,7 @@ ignore = [
     "B904",
     "B008",
     "S105",
+    "S110",
 ]
 unfixable = [
     "F401", # imported but unused (sometimes for __all__ / re-exports)

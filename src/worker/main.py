@@ -4,38 +4,14 @@ import asyncio
 import json
 import tempfile
 from pathlib import Path
-from typing import Any
 
 import aio_pika
 import aiohttp
 import boto3
+from aiohttp import ClientTimeout
 
 from config import settings
 from logging_config import logger
-
-
-async def _ensure_bucket_public(s3_client: Any, bucket: str) -> None:
-    try:
-        s3_client.get_bucket_acl(Bucket=bucket)
-    except Exception:
-        s3_client.create_bucket(Bucket=bucket)
-    # Make bucket public via policy (for demo)
-    public_policy = {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "PublicReadGetObject",
-                "Effect": "Allow",
-                "Principal": "*",
-                "Action": ["s3:GetObject"],
-                "Resource": [f"arn:aws:s3:::{bucket}/*"],
-            }
-        ],
-    }
-    try:
-        s3_client.put_bucket_policy(Bucket=bucket, Policy=json.dumps(public_policy))
-    except Exception:
-        logger.exception("Failed to set bucket policy")
 
 
 async def process_message(message: aio_pika.abc.AbstractIncomingMessage) -> None:
@@ -48,7 +24,8 @@ async def process_message(message: aio_pika.abc.AbstractIncomingMessage) -> None
 
             # Download file
             async with aiohttp.ClientSession() as session:
-                async with session.get(url, timeout=120) as resp:
+                timeout = ClientTimeout(total=120)
+                async with session.get(url, timeout=timeout) as resp:
                     resp.raise_for_status()
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".bin") as in_file:
                         while True:
@@ -75,17 +52,14 @@ async def process_message(message: aio_pika.abc.AbstractIncomingMessage) -> None
                 aws_access_key_id=settings.minio_access_key,
                 aws_secret_access_key=settings.minio_secret_key,
             )
-            await _ensure_bucket_public(s3, settings.minio_bucket_name)
 
             object_key = f"{user_email}/{output_path.name}"
             s3.upload_file(
                 str(output_path),
                 settings.minio_bucket_name,
                 object_key,
-                ExtraArgs={"ACL": "public-read", "ContentType": "audio/mpeg"},
+                ExtraArgs={"ContentType": "audio/mpeg"},
             )
-
-            public_url = f"{settings.minio_url}/{settings.minio_bucket_name}/{object_key}"
 
             # Publish to audio_out
             connection = await aio_pika.connect_robust(settings.rabbitmq_url)
@@ -95,7 +69,7 @@ async def process_message(message: aio_pika.abc.AbstractIncomingMessage) -> None
                 out_message = {
                     "name": user_name,
                     "email": user_email,
-                    "mp3_url": public_url,
+                    "file_key": object_key,
                 }
                 await channel.default_exchange.publish(
                     aio_pika.Message(
@@ -109,11 +83,11 @@ async def process_message(message: aio_pika.abc.AbstractIncomingMessage) -> None
             try:
                 input_path.unlink(missing_ok=True)
             except Exception:
-                pass
+                logger.warning(f"Failed to delete temp file {input_path}", exc_info=True)
             try:
                 Path(output_path).unlink(missing_ok=True)
             except Exception:
-                pass
+                logger.warning(f"Failed to delete temp file {output_path}", exc_info=True)
 
         except Exception as exc:
             logger.error(f"Failed to process message: {exc}")
