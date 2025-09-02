@@ -7,6 +7,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /worker
 
+# Install ffmpeg for audio conversion
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY pyproject.toml ./
 RUN pip install --upgrade pip setuptools wheel \
     && pip install -e .

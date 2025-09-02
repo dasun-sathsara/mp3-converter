@@ -11,4 +11,5 @@ def setup_logging() -> None:
     )
 
 
-logger = logging.getLogger("auth")
+logger = logging.getLogger("notification")
+setup_logging()

@@ -12,3 +12,4 @@ def setup_logging() -> None:
 
 
 logger = logging.getLogger("gateway")
+setup_logging()
