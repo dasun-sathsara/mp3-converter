@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-config
+data:
+  RABBITMQ_URL: "amqp://user:pass@rabbitmq:5672/"
+  SENDER_EMAIL: "noreply@dasunsathsara.com"
+  AUDIO_OUT_QUEUE: "audio_out"
