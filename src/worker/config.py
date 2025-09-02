@@ -11,7 +11,7 @@ class Settings(BaseSettings):
         validation_alias="RABBITMQ_URL", default="amqp://user:pass@rabbitmq:5672/"
     )
     audio_in_queue: str = Field(validation_alias="AUDIO_IN_QUEUE", default="audio_in")
-    mp3_out_queue: str = Field(validation_alias="MP3_OUT_QUEUE", default="mp3_out")
+    mp3_out_queue: str = Field(validation_alias="AUDIO_OUT_QUEUE", default="audio_out")
 
 
 try:

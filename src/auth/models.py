@@ -34,3 +34,4 @@ class ValidateResponse(BaseModel):
     valid: bool
     user_id: int | None = None
     email: EmailStr | None = None
+    name: str | None = None

@@ -19,9 +19,9 @@ spec:
           ports:
             - containerPort: 5672 # AMQP
             - containerPort: 15672 # Management UI
-          env:
+          envFrom:
             - configMapRef:
-                name: rabit-configmap
+                name: rabbit-configmap
           volumeMounts:
             - name: rabbitmq-data
               mountPath: /var/lib/rabbitmq

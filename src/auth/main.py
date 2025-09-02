@@ -77,7 +77,7 @@ def validate_token(
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token user"
             )
-        return ValidateResponse(valid=True, user_id=int(user_id), email=email)
+        return ValidateResponse(valid=True, user_id=int(user_id), email=email, name=user.name)
     except HTTPException:
         raise
     except Exception:

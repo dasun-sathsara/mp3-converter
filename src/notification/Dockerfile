@@ -13,4 +13,4 @@ RUN pip install --upgrade pip setuptools wheel \
 
 COPY . .
 
-CMD ["python", "notification.py"]
+CMD ["python", "main.py"]

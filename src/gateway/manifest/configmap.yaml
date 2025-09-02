@@ -4,3 +4,5 @@ metadata:
   name: gateway-configmap
 data:
   AUTH_SERVICE_URL: "http://auth-service:8000"
+  MINIO_URL: "http://minio:9000"
+  MINIO_BUCKET_NAME: "mp3-converter"

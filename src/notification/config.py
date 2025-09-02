@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     rabbitmq_url: str = Field(
         validation_alias="RABBITMQ_URL", default="amqp://user:pass@rabbitmq:5672/"
     )
-    rabbitmq_queue: str = Field(validation_alias="RABBITMQ_QUEUE", default="mp3_out")
+    audio_queue: str = Field(validation_alias="AUDIO_OUT_QUEUE", default="audio_out")
     sender_email: str = Field(validation_alias="SENDER_EMAIL", default="noreply@dasunsathsara.com")
 
 
