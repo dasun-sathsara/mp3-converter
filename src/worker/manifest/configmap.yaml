@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: worker-config
+  name: worker-config
 data:
-    MINIO_URL: 'http://minio:9000'
-    MINIO_BUCKET_NAME: 'mp3-converter'
-    AUDIO_IN_QUEUE: 'audio_in'
-    AUDIO_OUT_QUEUE: 'audio_out'
+  MINIO_URL: "http://minio:9000"
+  MINIO_BUCKET_NAME: "mp3-converter"
+  AUDIO_IN_QUEUE: "audio_in"
+  AUDIO_OUT_QUEUE: "audio_out"

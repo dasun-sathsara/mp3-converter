@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: worker
+  name: worker
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app: worker
-    template:
-        metadata:
-            labels:
-                app: worker
-        spec:
-            containers:
-                - name: worker
-                  image: dasunlk/mp3-converter-worker:latest
-                  env:
-                      - name: RABBITMQ_URL
-                        value: 'amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:5672/'
-                  envFrom:
-                      - configMapRef:
-                            name: worker-config
-                      - secretRef:
-                            name: minio-secret
-                      - secretRef:
-                            name: rabbit-secret
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          image: dasunlk/mp3-converter-worker:latest
+          env:
+            - name: RABBITMQ_URL
+              value: "amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:5672/"
+          envFrom:
+            - configMapRef:
+                name: worker-config
+            - secretRef:
+                name: worker-secret
+            - secretRef:
+                name: rabbit-secret

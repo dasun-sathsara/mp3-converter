@@ -1,4 +1,3 @@
-import os
 import sys
 
 from pydantic import Field, ValidationError
@@ -19,16 +18,9 @@ class Settings(BaseSettings):
 
 
 try:
-    resend_api_key = os.environ.get("RESEND_API_KEY")
-
-    if not resend_api_key:
-        raise ValidationError("RESEND_API_KEY environment variable is required.")
-
-    gateway_external_url = os.environ.get("GATEWAY_EXTERNAL_URL")
-    if not gateway_external_url:
-        raise ValidationError("GATEWAY_EXTERNAL_URL environment variable is required.")
-
-    settings = Settings(resend_api_key=resend_api_key, gateway_external_url=gateway_external_url)
-except ValidationError as exc:
+    # Pydantic will automatically read from environment variables
+    # based on the validation_alias settings in the Settings class
+    settings = Settings()
+except (ValidationError, ValueError) as exc:
     logger.error(f"Invalid configuration: {exc}")
     sys.exit(1)

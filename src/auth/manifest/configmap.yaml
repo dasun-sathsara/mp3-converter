@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: auth-configmap
+    name: auth-configmap
 data:
-  DATABASE_URL: "postgresql+psycopg://user:pass@auth-postgres-service:5432/auth"
-  JWT_ALGORITHM: "HS256"
-  JWT_EXPIRES_MINUTES: "60"
+    JWT_ALGORITHM: 'HS256'
+    JWT_EXPIRES_MINUTES: '60'

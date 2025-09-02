@@ -1,4 +1,3 @@
-import os
 import sys
 
 from pydantic import Field, ValidationError
@@ -22,20 +21,7 @@ class Settings(BaseSettings):
 
 
 try:
-    minio_access_key = os.getenv("MINIO_ACCESS_KEY")
-    minio_secret_key = os.getenv("MINIO_SECRET_KEY")
-    download_token_secret = os.getenv("DOWNLOAD_TOKEN_SECRET")
-
-    if not minio_access_key or not minio_secret_key:
-        raise ValidationError("MINIO_ACCESS_KEY and MINIO_SECRET_KEY must be set.")
-    if not download_token_secret:
-        raise ValidationError("DOWNLOAD_TOKEN_SECRET must be set.")
-
-    settings = Settings(
-        minio_access_key=minio_access_key,
-        minio_secret_key=minio_secret_key,
-        download_token_secret=download_token_secret,
-    )
-except ValidationError as exc:
+    settings = Settings()
+except (ValidationError, ValueError) as exc:
     logger.error(f"Invalid configuration: {exc}")
     sys.exit(1)

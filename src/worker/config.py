@@ -1,4 +1,3 @@
-import os
 import sys
 
 from pydantic import Field, ValidationError
@@ -20,15 +19,7 @@ class Settings(BaseSettings):
 
 
 try:
-    minio_access_key = os.getenv("MINIO_ACCESS_KEY")
-    minio_secret_key = os.getenv("MINIO_SECRET_KEY")
-
-    if not minio_access_key or not minio_secret_key:
-        raise ValidationError(
-            "MINIO_ACCESS_KEY and MINIO_SECRET_KEY must be set in environment variables."
-        )
-
-    settings = Settings(minio_access_key=minio_access_key, minio_secret_key=minio_secret_key)
-except ValidationError as exc:
+    settings = Settings()
+except (ValidationError, ValueError) as exc:
     logger.error(f"Invalid configuration: {exc}")
     sys.exit(1)
