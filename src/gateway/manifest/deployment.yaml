@@ -1,24 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway-deployment
+    name: gateway-deployment
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: gateway
-  template:
-    metadata:
-      labels:
-        app: gateway
-    spec:
-      containers:
-        - name: gateway
-          image: dasunlk/mp3-converter-gateway:latest
-          ports:
-            - containerPort: 8000
-          envFrom:
-            - configMapRef:
-                name: gateway-configmap
-            - secretRef:
-                name: gateway-secret
+    replicas: 1
+    selector:
+        matchLabels:
+            app: gateway
+    template:
+        metadata:
+            labels:
+                app: gateway
+        spec:
+            containers:
+                - name: gateway
+                  image: dasunlk/mp3-converter-gateway:latest
+                  ports:
+                      - containerPort: 8000
+                  env:
+                      - name: RABBITMQ_URL
+                        value: 'amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:5672/'
+                  envFrom:
+                      - configMapRef:
+                            name: gateway-configmap
+                      - secretRef:
+                            name: gateway-secret
+                      - secretRef:
+                            name: minio-secret
+                      - secretRef:
+                            name: rabbit-secret

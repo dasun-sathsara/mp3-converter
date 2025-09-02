@@ -1,10 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gateway-configmap
+    name: gateway-configmap
 data:
-  AUTH_SERVICE_URL: "http://auth-service:8000"
-  MINIO_URL: "http://minio:9000"
-  MINIO_BUCKET_NAME: "mp3-converter"
-  RABBITMQ_URL: "amqp://user:pass@rabbitmq:5672/"
-  AUDIO_IN_QUEUE: "audio_in"
+    AUTH_SERVICE_URL: 'http://auth-service:8000'
+    MINIO_URL: 'http://minio:9000'
+    MINIO_BUCKET_NAME: 'mp3-converter'
+    AUDIO_IN_QUEUE: 'audio_in'

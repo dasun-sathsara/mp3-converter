@@ -1,22 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: notification
+    name: notification
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: notification
-  template:
-    metadata:
-      labels:
-        app: notification
-    spec:
-      containers:
-        - name: notification
-          image: dasunlk/mp3-converter-notification:latest
-          envFrom:
-            - configMapRef:
-                name: notification-config
-            - secretRef:
-                name: notification-secret
+    replicas: 1
+    selector:
+        matchLabels:
+            app: notification
+    template:
+        metadata:
+            labels:
+                app: notification
+        spec:
+            containers:
+                - name: notification
+                  image: dasunlk/mp3-converter-notification:latest
+                  env:
+                      - name: RABBITMQ_URL
+                        value: 'amqp://$(RABBITMQ_DEFAULT_USER):$(RABBITMQ_DEFAULT_PASS)@rabbitmq:5672/'
+                  envFrom:
+                      - configMapRef:
+                            name: notification-config
+                      - secretRef:
+                            name: notification-secret
+                      - secretRef:
+                            name: rabbit-secret
